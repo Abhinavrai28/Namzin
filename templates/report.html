@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Report #{{ scan.id }} — Metrology Compliance Scanner{% endblock %}
+{% block content %}
+
+<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap;">
+  <div>
+    <h1>{{ scan.product_name or "Unnamed product" }}</h1>
+    <p style="color:var(--ink-soft);margin-top:-4px;">
+      {{ scan.brand or "—" }} &middot; {{ scan.category or "Uncategorised" }} &middot;
+      Scan #{{ scan.id }} &middot; <span class="mono">{{ scan.created_at[:19] }}</span>
+    </p>
+  </div>
+  <div style="text-align:right;">
+    <span class="pill {{ scan.overall_status }}"><span class="dot"></span>{{ scan.overall_status }}</span>
+    <div class="mono" style="font-size:22px;margin-top:6px;">{{ scan.score }}%</div>
+    <div style="font-size:12px;color:var(--ink-soft);">compliance score</div>
+  </div>
+</div>
+
+<div class="grid cols-2" style="margin-top:22px;">
+  <div class="panel">
+    <h2>Declaration-by-declaration findings</h2>
+    <table>
+      <thead><tr><th>Declaration</th><th>Rule</th><th>Status</th><th>Detail</th></tr></thead>
+      <tbody>
+      {% for d in declarations %}
+        <tr>
+          <td>{{ d.label }}</td>
+          <td class="mono" style="color:var(--ink-soft);">{{ d.rule_ref }}</td>
+          <td><span class="pill {{ d.status }}"><span class="dot"></span>{{ d.status }}</span></td>
+          <td style="color:var(--ink-soft);">{{ d.detail }}
+            {% if d.matched_text %}<div class="mono" style="margin-top:4px;color:var(--ink);">“{{ d.matched_text }}”</div>{% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
+    <div style="margin-top:18px;display:flex;gap:10px;">
+      <a class="btn" href="{{ url_for('report_pdf', scan_id=scan.id) }}">Download PDF report</a>
+      <a class="btn secondary" href="{{ url_for('report_json', scan_id=scan.id) }}">View raw JSON</a>
+    </div>
+  </div>
+
+  <div>
+    <div class="panel" style="margin-bottom:18px;">
+      <h2>Label image</h2>
+      <img src="{{ url_for('static', filename=scan.image_path) }}" style="width:100%;border-radius:2px;border:1px solid var(--line);">
+      {% if scan.pdp_width_cm %}
+      <p style="font-size:12.5px;color:var(--ink-soft);margin-top:8px;">
+        Declared panel size: <span class="mono">{{ scan.pdp_width_cm }} × {{ scan.pdp_height_cm or scan.pdp_width_cm }} cm</span>
+      </p>
+      {% endif %}
+    </div>
+    <div class="panel">
+      <h2>Raw OCR text</h2>
+      <pre class="mono" style="white-space:pre-wrap;font-size:12px;color:var(--ink-soft);max-height:240px;overflow:auto;margin:0;">{{ scan.ocr_text }}</pre>
+    </div>
+  </div>
+</div>
+
+<footer class="note">Automated screening tool — REVIEW items require confirmation by an authorised Legal Metrology officer before action.</footer>
+
+{% endblock %}

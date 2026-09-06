@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Scan product — Metrology Compliance Scanner{% endblock %}
+{% block content %}
+
+<h1>Scan a packaged commodity</h1>
+<p style="color:var(--ink-soft);max-width:640px;">
+  Upload a clear, front-on photo of the label or Principal Display Panel (PDP).
+  The system will extract the printed declarations with OCR and check them
+  against Rule 6 of the Legal Metrology (Packaged Commodities) Rules, 2011.
+</p>
+
+<form method="post" enctype="multipart/form-data" style="margin-top:22px;">
+  <div class="grid cols-2">
+    <div class="panel">
+      <h2>Label image</h2>
+      <div class="upload-drop">
+        <input type="file" name="image" id="image" accept="image/*" required style="width:100%;">
+        <p style="margin:10px 0 0;font-size:12.5px;">JPG or PNG, up to 12&nbsp;MB. A sharp, well-lit, front-on shot gives the most reliable reading.</p>
+      </div>
+
+      <h2 style="margin-top:24px;">Principal Display Panel size</h2>
+      <p class="field .hint" style="color:var(--ink-soft);font-size:12.5px;margin-top:-4px;">
+        Optional, but required for an automated font-size (Second Schedule) check. Measure the panel with a scale — width and height in centimetres.
+      </p>
+      <div class="field-row">
+        <div class="field">
+          <label for="pdp_width_cm">Panel width (cm)</label>
+          <input type="number" step="0.1" min="0" name="pdp_width_cm" id="pdp_width_cm" placeholder="e.g. 9.5">
+        </div>
+        <div class="field">
+          <label for="pdp_height_cm">Panel height (cm)</label>
+          <input type="number" step="0.1" min="0" name="pdp_height_cm" id="pdp_height_cm" placeholder="e.g. 14">
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Product details</h2>
+      <div class="field">
+        <label for="product_name">Product name</label>
+        <input type="text" name="product_name" id="product_name" placeholder="e.g. Refined Sunflower Oil 1L">
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="brand">Brand</label>
+          <input type="text" name="brand" id="brand">
+        </div>
+        <div class="field">
+          <label for="category">Category</label>
+          <input type="text" name="category" id="category" placeholder="e.g. Edible oil">
+        </div>
+      </div>
+      <div class="field">
+        <label for="location">Inspection location</label>
+        <input type="text" name="location" id="location" placeholder="e.g. Retail store, Sector 18, Lucknow">
+      </div>
+      <div class="field">
+        <label for="notes">Notes</label>
+        <textarea name="notes" id="notes" rows="3" placeholder="Any context for the inspection file"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:20px;">
+    <button type="submit" class="btn">Run compliance scan</button>
+  </div>
+</form>
+
+{% endblock %}

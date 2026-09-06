@@ -1,0 +1,150 @@
+/* ---------------------------------------------------------------------
+   Design tokens
+   Concept: a Legal Metrology "measurement ledger" — the visual language
+   of calibration instruments and gazette registers, not a generic SaaS
+   dashboard. The ruled tick-divider is a literal nod to the subject
+   (metrology = the science of measurement).
+------------------------------------------------------------------------ */
+:root {
+  --ink: #10233B;
+  --ink-soft: #4B5563;
+  --paper: #EFF1EE;
+  --panel: #FFFFFF;
+  --line: #D8D5CB;
+  --pass: #1F6F4A;
+  --fail: #A23B2E;
+  --review: #96731F;
+  --pass-bg: #E7F1EC;
+  --fail-bg: #F6E9E7;
+  --review-bg: #F3ECDD;
+
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body: "IBM Plex Sans", -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+h1, h2, h3 { font-family: var(--font-display); font-weight: 600; margin: 0 0 6px; }
+h1 { font-size: 28px; }
+h2 { font-size: 19px; }
+h3 { font-size: 15px; }
+
+a { color: var(--ink); }
+
+.mono, .num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+/* Ruler tick divider — the recurring motif */
+.tick-divider {
+  height: 10px;
+  background-image: repeating-linear-gradient(
+    to right, var(--line) 0, var(--line) 1px, transparent 1px, transparent 12px
+  );
+  background-position: bottom;
+  background-size: 100% 8px;
+  background-repeat: repeat-x;
+  border-bottom: 1px solid var(--line);
+  margin: 0 0 28px;
+}
+
+.shell { max-width: 1080px; margin: 0 auto; padding: 0 24px 64px; }
+
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 24px 16px; max-width: 1080px; margin: 0 auto;
+}
+.brand { display: flex; align-items: baseline; gap: 10px; }
+.brand .mark {
+  width: 22px; height: 22px; border: 1.5px solid var(--ink);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono); font-size: 11px; font-weight: 600;
+  border-radius: 2px;
+}
+.brand .name { font-family: var(--font-display); font-weight: 600; font-size: 17px; }
+.brand .sub { color: var(--ink-soft); font-size: 12.5px; }
+
+.nav { display: flex; gap: 22px; align-items: center; font-size: 14px; }
+.nav a { text-decoration: none; color: var(--ink-soft); padding-bottom: 3px; border-bottom: 2px solid transparent; }
+.nav a.active, .nav a:hover { color: var(--ink); border-bottom-color: var(--ink); }
+.nav .user { color: var(--ink-soft); font-size: 13px; }
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 22px;
+}
+
+.grid { display: grid; gap: 18px; }
+.grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.grid.cols-2 { grid-template-columns: 1.1fr 0.9fr; }
+@media (max-width: 860px) {
+  .grid.cols-3, .grid.cols-2 { grid-template-columns: 1fr; }
+}
+
+.stat { border: 1px solid var(--line); border-radius: 3px; padding: 16px 18px; background: var(--panel); }
+.stat .value { font-family: var(--font-mono); font-size: 30px; font-weight: 600; }
+.stat .label { color: var(--ink-soft); font-size: 12.5px; margin-top: 4px; }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  border: 1px solid var(--ink); background: var(--ink); color: #fff;
+  padding: 9px 16px; border-radius: 3px; font-size: 14px; cursor: pointer;
+  text-decoration: none; font-family: var(--font-body);
+}
+.btn:hover { background: #0b1a2c; }
+.btn.secondary { background: transparent; color: var(--ink); }
+.btn.secondary:hover { background: rgba(16,35,59,0.06); }
+
+.field { margin-bottom: 16px; }
+.field label { display: block; font-size: 13px; color: var(--ink-soft); margin-bottom: 6px; }
+.field input[type=text], .field input[type=number], .field input[type=password],
+.field select, .field textarea {
+  width: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: 3px;
+  font-family: var(--font-body); font-size: 14px; background: #fff;
+}
+.field .hint { font-size: 12px; color: var(--ink-soft); margin-top: 5px; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+.pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 3px 10px; border-radius: 999px; font-size: 12.5px; font-weight: 600;
+  font-family: var(--font-mono);
+}
+.pill .dot { width: 7px; height: 7px; border-radius: 50%; }
+.pill.PASS { background: var(--pass-bg); color: var(--pass); }
+.pill.PASS .dot { background: var(--pass); }
+.pill.FAIL { background: var(--fail-bg); color: var(--fail); }
+.pill.FAIL .dot { background: var(--fail); }
+.pill.REVIEW { background: var(--review-bg); color: var(--review); }
+.pill.REVIEW .dot { background: var(--review); }
+
+table { width: 100%; border-collapse: collapse; }
+th, td { text-align: left; padding: 11px 10px; border-bottom: 1px solid var(--line); font-size: 13.5px; vertical-align: top; }
+th { color: var(--ink-soft); font-weight: 500; font-size: 12px; }
+tr:last-child td { border-bottom: none; }
+
+.flash { padding: 10px 14px; border-radius: 3px; font-size: 13.5px; margin-bottom: 16px; }
+.flash.error { background: var(--fail-bg); color: var(--fail); border: 1px solid var(--fail); }
+.flash.success { background: var(--pass-bg); color: var(--pass); border: 1px solid var(--pass); }
+
+.upload-drop {
+  border: 1.5px dashed var(--line); border-radius: 4px; padding: 34px 20px;
+  text-align: center; color: var(--ink-soft); background: #fff;
+}
+
+.login-wrap {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+}
+.login-card { width: 340px; }
+
+footer.note { color: var(--ink-soft); font-size: 12px; margin-top: 26px; }

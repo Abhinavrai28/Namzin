@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — Metrology Compliance Scanner{% endblock %}
+{% block content %}
+
+<h1>Enforcement dashboard</h1>
+<p style="color:var(--ink-soft);">Overview of scanned products and compliance status.</p>
+
+<div class="grid cols-3" style="margin:20px 0;">
+  <div class="stat">
+    <div class="value">{{ stats.total }}</div>
+    <div class="label">Products scanned</div>
+  </div>
+  <div class="stat">
+    <div class="value" style="color:var(--fail);">{{ stats.by_status.get('FAIL', 0) }}</div>
+    <div class="label">Non-compliant (FAIL)</div>
+  </div>
+  <div class="stat">
+    <div class="value">{{ stats.avg_score }}%</div>
+    <div class="label">Average compliance score</div>
+  </div>
+</div>
+
+<div class="grid cols-2">
+  <div class="panel">
+    <h2>Status breakdown</h2>
+    <canvas id="statusChart" height="180"></canvas>
+  </div>
+  <div class="panel">
+    <h2>Top categories scanned</h2>
+    <canvas id="categoryChart" height="180"></canvas>
+  </div>
+</div>
+
+<div class="panel" style="margin-top:18px;">
+  <h2>Recent scans</h2>
+  <table>
+    <thead><tr><th>Product</th><th>Status</th><th>Score</th><th>Date</th><th></th></tr></thead>
+    <tbody>
+    {% for r in stats.recent %}
+      <tr>
+        <td>{{ r.product_name or "Unnamed" }}</td>
+        <td><span class="pill {{ r.overall_status }}"><span class="dot"></span>{{ r.overall_status }}</span></td>
+        <td class="mono">{{ r.score }}%</td>
+        <td class="mono" style="color:var(--ink-soft);">{{ r.created_at[:10] }}</td>
+        <td><a href="{{ url_for('view_report', scan_id=r.id) }}">View →</a></td>
+      </tr>
+    {% else %}
+      <tr><td colspan="5" style="color:var(--ink-soft);">No scans yet — <a href="{{ url_for('scan') }}">run your first scan</a>.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<script>
+  const inkSoft = '#4B5563';
+  const statusData = {{ stats.by_status | tojson }};
+  new Chart(document.getElementById('statusChart'), {
+    type: 'bar',
+    data: {
+      labels: ['PASS', 'FAIL', 'REVIEW'],
+      datasets: [{
+        data: [statusData.PASS || 0, statusData.FAIL || 0, statusData.REVIEW || 0],
+        backgroundColor: ['#1F6F4A', '#A23B2E', '#96731F'],
+        borderRadius: 2,
+      }]
+    },
+    options: {
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
+    }
+  });
+
+  const catData = {{ stats.by_category | tojson }};
+  new Chart(document.getElementById('categoryChart'), {
+    type: 'bar',
+    data: {
+      labels: catData.map(c => c.category),
+      datasets: [{ data: catData.map(c => c.c), backgroundColor: '#10233B', borderRadius: 2 }]
+    },
+    options: {
+      indexAxis: 'y',
+      plugins: { legend: { display: false } },
+      scales: { x: { beginAtZero: true, ticks: { precision: 0 } } }
+    }
+  });
+</script>
+
+{% endblock %}

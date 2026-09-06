@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Metrology Compliance Scanner{% endblock %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+{% if current_user %}
+<div class="topbar">
+  <div class="brand">
+    <span class="mark">LM</span>
+    <span class="name">Metrology Compliance Scanner</span>
+    <span class="sub">&nbsp;&mdash; Packaged Commodities Rules, 2011</span>
+  </div>
+  <div class="nav">
+    <a href="{{ url_for('dashboard') }}" class="{{ 'active' if request.endpoint=='dashboard' }}">Dashboard</a>
+    <a href="{{ url_for('scan') }}" class="{{ 'active' if request.endpoint=='scan' }}">Scan product</a>
+    <a href="{{ url_for('history') }}" class="{{ 'active' if request.endpoint=='history' }}">Repository</a>
+    {% if current_user.role == 'admin' %}
+    <a href="{{ url_for('admin_users') }}" class="{{ 'active' if request.endpoint=='admin_users' }}">Officers</a>
+    {% endif %}
+    <span class="user">{{ current_user.username }} &middot; {{ current_user.role }}</span>
+    <a href="{{ url_for('logout') }}">Log out</a>
+  </div>
+</div>
+<div class="tick-divider"></div>
+{% endif %}
+
+<div class="shell">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="flash {{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+  {% block content %}{% endblock %}
+</div>
+
+</body>
+</html>

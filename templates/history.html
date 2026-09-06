@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Repository — Metrology Compliance Scanner{% endblock %}
+{% block content %}
+
+<h1>Scanned product repository</h1>
+<p style="color:var(--ink-soft);">Search and retrieve past scans and their compliance history.</p>
+
+<form method="get" style="display:flex;gap:10px;margin:18px 0 20px;flex-wrap:wrap;">
+  <input type="text" name="q" value="{{ q }}" placeholder="Search by product, brand or category" style="flex:1;min-width:220px;padding:10px 12px;border:1px solid var(--line);border-radius:3px;">
+  <select name="status" style="padding:10px 12px;border:1px solid var(--line);border-radius:3px;">
+    <option value="">All statuses</option>
+    <option value="PASS" {{ 'selected' if status=='PASS' }}>PASS</option>
+    <option value="FAIL" {{ 'selected' if status=='FAIL' }}>FAIL</option>
+    <option value="REVIEW" {{ 'selected' if status=='REVIEW' }}>REVIEW</option>
+  </select>
+  <button class="btn" type="submit">Search</button>
+</form>
+
+<div class="panel">
+  <table>
+    <thead><tr><th>Product</th><th>Brand</th><th>Category</th><th>Status</th><th>Score</th><th>Scanned by</th><th>Date</th><th></th></tr></thead>
+    <tbody>
+    {% for r in rows %}
+      <tr>
+        <td>{{ r.product_name or "—" }}</td>
+        <td>{{ r.brand or "—" }}</td>
+        <td>{{ r.category or "—" }}</td>
+        <td><span class="pill {{ r.overall_status }}"><span class="dot"></span>{{ r.overall_status }}</span></td>
+        <td class="mono">{{ r.score }}%</td>
+        <td>{{ r.scanned_by }}</td>
+        <td class="mono" style="color:var(--ink-soft);">{{ r.created_at[:10] }}</td>
+        <td><a href="{{ url_for('view_report', scan_id=r.id) }}">View →</a></td>
+      </tr>
+    {% else %}
+      <tr><td colspan="8" style="color:var(--ink-soft);">No scans found yet.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

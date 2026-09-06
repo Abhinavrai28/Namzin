@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Officers — Metrology Compliance Scanner{% endblock %}
+{% block content %}
+
+<h1>Manage officer accounts</h1>
+<p style="color:var(--ink-soft);">Role-based access: officers can scan and view reports; admins can also manage accounts.</p>
+
+<div class="panel" style="max-width:420px;margin-top:18px;">
+  <form method="post">
+    <div class="field">
+      <label for="username">Username</label>
+      <input type="text" name="username" id="username" required>
+    </div>
+    <div class="field">
+      <label for="password">Temporary password</label>
+      <input type="password" name="password" id="password" required>
+    </div>
+    <div class="field">
+      <label for="role">Role</label>
+      <select name="role" id="role">
+        <option value="officer">Officer</option>
+        <option value="admin">Admin</option>
+      </select>
+    </div>
+    <button class="btn" type="submit">Create account</button>
+  </form>
+</div>
+
+{% endblock %}
