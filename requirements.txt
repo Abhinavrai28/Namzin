@@ -3,3 +3,4 @@ Werkzeug==3.1.7
 pytesseract==0.3.13
 Pillow==12.1.1
 reportlab==4.4.10
+gunicorn
